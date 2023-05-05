@@ -10,11 +10,14 @@ import Login from "./components/logs/Login";
 import Signup from "./components/logs/Signup";
 import Alert from "./components/Alert";
 import AlertState from "./context/alert/AlertState"
+import Profile from "./components/Profile";
+import UserState from "./context/users/UserState";
 
 function App() {
   return (
     <>
       <AlertState>
+        <UserState>
           <NoteState>
             <BrowserRouter>
               <Navbar />
@@ -26,9 +29,11 @@ function App() {
                 <Route path="/help" element={<Help />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
+                {localStorage.getItem('token') ? <Route path="/profile" element={<Profile />} /> : ""}
               </Routes>
             </BrowserRouter>
           </NoteState>
+        </UserState>
       </AlertState>
 
     </>

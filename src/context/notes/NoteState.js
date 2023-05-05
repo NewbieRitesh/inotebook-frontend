@@ -4,7 +4,6 @@ import alertContext from "../alert/alertContext";
 
 const NoteState = (props) => {
     const [notes, setNotes] = useState([])
-
     const useAlertContext = useContext(alertContext)
     const { showAlert } = useAlertContext
     const host = "http://localhost:1000"
