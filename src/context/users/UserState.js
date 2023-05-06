@@ -41,15 +41,96 @@ const UserState = (props) => {
 
         let data = await response.text();
         console.log(data);
-        if (response.status===200) {
+        if (response.status === 200) {
             showAlert("success", "Data Updated Successfully")
         } else {
             showAlert("error", "Some error occur")
         }
     }
 
+    const updateUserEmail = async (id, email, authPassword) => {
+        let headersList = {
+            "auth-token": localStorage.getItem('token'),
+            "Content-Type": "application/json"
+        }
+
+        let bodyContent = JSON.stringify({
+            "email": email,
+            "authPassword": authPassword
+        });
+        let response = await fetch(`http://localhost:1000/api/auth/update-user-email/${id}`, {
+            method: "POST",
+            body: bodyContent,
+            headers: headersList
+        });
+
+        let data = await response.text();
+        return JSON.parse(data)
+    }
+
+    const authenticateUser = async (authPassword) => {
+        let headersList = {
+            "auth-token": localStorage.getItem('token'),
+            "Content-Type": "application/json"
+        }
+
+        let bodyContent = JSON.stringify({
+            "password": authPassword
+        });
+
+        let response = await fetch("http://localhost:1000/api/auth/authenticate/6453a5f69f1ec36802f7554c", {
+            method: "POST",
+            body: bodyContent,
+            headers: headersList
+        });
+
+        let data = await response.text();
+        return JSON.parse(data)
+    }
+
+    const updateUserPassword = async (id, newPassword, authPassword) => {
+        let headersList = {
+            "auth-token": localStorage.getItem('token'),
+            "Content-Type": "application/json"
+        }
+
+        let bodyContent = JSON.stringify({
+            "newPassword": newPassword,
+            "authPassword": authPassword
+        }
+        );
+
+        let response = await fetch(`http://localhost:1000/api/auth/update-user-password/${id}`, {
+            method: "PUT",
+            body: bodyContent,
+            headers: headersList
+        });
+
+        let data = await response.text();
+        return JSON.parse(data)
+    }
+
+    const deleteUser = async (id, authPassword)=> {
+        let headersList = {
+            "auth-token": localStorage.getItem('token'),
+            "Content-Type": "application/json"
+        }
+
+        let bodyContent = JSON.stringify({
+            "authPassword": authPassword
+        });
+
+        let response = await fetch(`http://localhost:1000/api/auth/delete-user/${id}` , {
+            method: "DELETE",
+            body: bodyContent,
+            headers: headersList
+        })
+        let data = await response.text();
+        return data
+    }
+
     return (
-        <UserContext.Provider value={{ getUserData, updateUserData, userData, setUserData }}>
+        <UserContext.Provider value={{ getUserData, updateUserData, userData, updateUserPassword, setUserData, updateUserEmail, authenticateUser, deleteUser }}>
             {props.children}
         </UserContext.Provider>
     )

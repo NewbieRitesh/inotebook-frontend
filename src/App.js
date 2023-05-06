@@ -10,7 +10,7 @@ import Login from "./components/logs/Login";
 import Signup from "./components/logs/Signup";
 import Alert from "./components/Alert";
 import AlertState from "./context/alert/AlertState"
-import Profile from "./components/Profile";
+import Profile from "./components/profile/Profile";
 import UserState from "./context/users/UserState";
 
 function App() {
