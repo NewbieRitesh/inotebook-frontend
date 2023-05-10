@@ -17,7 +17,7 @@ const UserState = (props) => {
         else setShowPassword({ show: true, inputType: "text", iconClassText: "fa-eye-slash" })
     }
 
-    // function to call login api request 
+    // api call to login 
     const userLogin = async (email, password) => {
         let headersList = {
             "Content-Type": "application/json"
@@ -37,6 +37,27 @@ const UserState = (props) => {
             // save the auth token in local storage and redirect to home page
             localStorage.setItem("token", data.authToken)
         }
+        return data
+    }
+
+    // api call to sign up user
+    const userSignUp = async (name, email, password) => {
+        let headersList = { "Content-Type": "application/json" }
+        let bodyContent = JSON.stringify({
+            "name": name,
+            "email": email,
+            "password": password
+        });
+        let response = await fetch("http://localhost:1000/api/auth/createuser", {
+            method: "POST",
+            body: bodyContent,
+            headers: headersList
+        });
+        let data = await response.json();
+        if (data.success === true) useAlertContext.showAlert("success", "Account Created Successfully ")
+        else useAlertContext.showAlert("error", data.error)
+        // save the auth token in local storage and redirect to home page
+        if (data.success === true) localStorage.setItem("token", data.authToken)
         return data
     }
 
@@ -148,7 +169,7 @@ const UserState = (props) => {
     }
 
     return (
-        <UserContext.Provider value={{ userLogin, getUserData, showPasswordFunc, showPassword, updateUserData, userData, updateUserPassword, setUserData, updateUserEmail, authenticateUser, deleteUser }}>
+        <UserContext.Provider value={{ userLogin, userSignUp, getUserData, showPasswordFunc, showPassword, updateUserData, userData, updateUserPassword, setUserData, updateUserEmail, authenticateUser, deleteUser }}>
             {props.children}
         </UserContext.Provider>
     )

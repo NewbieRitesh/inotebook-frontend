@@ -29,7 +29,7 @@ function App() {
                 <Route path="/help" element={<Help />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
-                {localStorage.getItem('token') ? <Route path="/profile" element={<Profile />} /> : ""}
+                <Route path="/profile" element={<Profile />} />
               </Routes>
             </BrowserRouter>
           </NoteState>

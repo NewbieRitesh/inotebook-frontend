@@ -1,56 +1,21 @@
 import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import alertContext from '../../context/alert/alertContext';
+import userContext from '../../context/users/userContext';
 
 const Signup = () => {
-  const [showPassword, setShowPassword] = useState({ show: false, inputType: "password", iconClassText: "fa-eye" })
+  // hooks declaration
   const [credentials, setCredentials] = useState({ name: "", email: "", password: "", cpassword: "" })
-
-  const useAlertContext = useContext(alertContext)
   const navigate = useNavigate();
+  // importing and destructing contexts
+  const useUserContext = useContext(userContext)
+  const { userSignUp, showPassword, showPasswordFunc } = useUserContext
 
-  const handleChange = async (event) => {
-    setCredentials({ ...credentials, [event.target.name]: event.target.value })
-  }
-
-  const showPasswordFunc = () => {
-    if (showPassword.show) {
-      setShowPassword({ show: false, inputType: "password", iconClassText: "fa-eye" })
-    } else {
-      setShowPassword({ show: true, inputType: "text", iconClassText: "fa-eye-slash" })
-    }
-  }
-
+  // handling input change and clicks
+  const handleChange = async (event) => setCredentials({ ...credentials, [event.target.name]: event.target.value })
   const clickSignUp = async (e) => {
     e.preventDefault()
-    let headersList = {
-      "Content-Type": "application/json"
-    }
-
-    let bodyContent = JSON.stringify({
-      "name": credentials.name,
-      "email": credentials.email,
-      "password": credentials.password
-    });
-
-    let response = await fetch("http://localhost:1000/api/auth/createuser", {
-      method: "POST",
-      body: bodyContent,
-      headers: headersList
-    });
-
-    let data = await response.json();
-    console.log(data);
-    if (response.status === 200) {
-      useAlertContext.showAlert("success", "Account Created Successfully ")
-    } else {
-      useAlertContext.showAlert("error", data.error)
-    }
-    if (data.success) {
-      // save the auth token in local storage and redirect to home page
-      await localStorage.setItem("token", data.authToken)
-      navigate('/')
-    }
+    const response = await userSignUp(credentials.name, credentials.email, credentials.password)
+    if (response.success === true) navigate('/')
   }
 
   return (

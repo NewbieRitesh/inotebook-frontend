@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import userContext from '../../context/users/userContext'
+import { useNavigate } from 'react-router-dom'
 
 const Profile = () => {
 
@@ -12,7 +13,8 @@ const Profile = () => {
   // imports of contexts
   const useUserContext = useContext(userContext)
   const { getUserData, userData, setUserData, deleteUser, updateUserData, updateUserPassword, updateUserEmail, authenticateUser } = useUserContext;
-  // useRef Hooks
+  // react Hooks
+  const navigate = useNavigate()
   const conformPasswordRef = useRef()
   const closeModal = useRef()
   const openEditEmailRef = useRef()
@@ -21,7 +23,9 @@ const Profile = () => {
   const closeEditPasswordRef = useRef()
 
   useEffect(() => {
-    getUserData()
+    if (localStorage.getItem('token')) getUserData()
+    // eslint-disable-next-line
+    else navigate('/login')
     // eslint-disable-next-line
   }, [])
 
@@ -52,19 +56,11 @@ const Profile = () => {
     // authenticate password
     if (response.comparePasswords === true) {
       closeModal.current.click()
-      if (editItem === "email") {
-        openEditEmailRef.current.click()
-      }
-      if (editItem === "password") {
-        openEditPasswordRef.current.click()
-      }
-      if (editItem === "delete") {
-        deleteUserInDB()
-      }
+      if (editItem === "email") openEditEmailRef.current.click()
+      if (editItem === "password") openEditPasswordRef.current.click()
+      if (editItem === "delete") deleteUserInDB()
     }
-    else {
-      console.log("Wrong Password")
-    }
+    else console.log("Wrong Password")
   }
 
   // functions to edit email
