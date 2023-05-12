@@ -18,25 +18,21 @@ const NoteState = (props) => {
                 "auth-token": localStorage.getItem('token')
             }
         })
-        console.log(response);
-        const json = await response.json()
-        setNotes(json)
+        const data = await response.json()
+        setNotes(data)
     }
 
     // add Note
     const addNote = async (title, description, tag) => {
-
         const note = {
             "title": title,
             "description": description,
             "tag": tag,
         }
-
         let headersList = {
             "Content-Type": "application/json",
             "auth-token": localStorage.getItem('token')
         }
-
         let bodyContent = JSON.stringify(note);
         let response = await fetch(`${host}/api/notes/addnote`, {
             method: "POST",
@@ -44,12 +40,10 @@ const NoteState = (props) => {
             headers: headersList
         });
         let data = await response.json();
-        setNotes(notes.concat(data))
-        if (response.status===200) {
-            showAlert("success", "Note added Successfully")
-        } else {
-            showAlert("error", "Some error occur")
-        }
+        console.log(data)
+        setNotes(notes.concat(data.response))
+        if (data.success === true) showAlert("success", "Note added Successfully")
+        else showAlert("error", data.response)
     }
 
     // update note
@@ -58,18 +52,18 @@ const NoteState = (props) => {
             "Content-Type": "application/json",
             "auth-token": localStorage.getItem('token')
         }
-
         let bodyContent = JSON.stringify({
             "title": title,
             "description": description,
             "tag": tag
         });
-
         let response = await fetch(`${host}/api/notes/updatenote/${id}`, {
             method: "PUT",
             body: bodyContent,
             headers: headersList
         });
+        let data = await response.json()
+        console.log(data);
         let newNotes = JSON.parse(JSON.stringify(notes))
         for (let index = 0; index < newNotes.length; index++) {
             const element = newNotes[index];
@@ -81,11 +75,8 @@ const NoteState = (props) => {
             }
         }
         setNotes(newNotes);
-        if (response.status===200) {
-            showAlert("success", "Note updated Successfully")
-        } else {
-            showAlert("error", "Some error occur")
-        }
+        if (data.success === true) showAlert("success", "Note updated Successfully")
+        else showAlert("error", data.response)
     }
 
     // delete note
@@ -96,16 +87,14 @@ const NoteState = (props) => {
             "Content-Type": "application/json",
             "auth-token": localStorage.getItem('token')
         }
-
         let response = await fetch(`${host}/api/notes/deletenote/${id}`, {
             method: "DELETE",
             headers: headersList
         });
-        if (response.status===200) {
-            showAlert("success", "Note deleted Successfully")
-        } else {
-            showAlert("error", "Some error occur")
-        }
+        let data = await response.json()
+        console.log(data);
+        if (data.success === true) showAlert("success", "Note deleted Successfully")
+        else showAlert("error", data.response)
     }
     return (
         <NoteContext.Provider value={{ notes, setNotes, addNote, editNote, deleteNote, getNotes }}>

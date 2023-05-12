@@ -59,8 +59,7 @@ const Profile = () => {
       if (editItem === "email") openEditEmailRef.current.click()
       if (editItem === "password") openEditPasswordRef.current.click()
       if (editItem === "delete") deleteUserInDB()
-    }
-    else console.log("Wrong Password")
+    } else console.log("Wrong Password")
   }
 
   // functions to edit email
@@ -120,7 +119,7 @@ const Profile = () => {
             <label htmlFor="name" className="form-label">Name:</label>
             <div className='d-flex row justify-content-center'>
               <div className='col-sm-8'>
-                <input type="text" name='name' className="form-control" value={`${userData.name ? userData.name : ""}`} id="name" onChange={handleChange} aria-describedby="emailHelp" />
+                <input type="text" name='name' className="form-control" value={`${userData.user.name ? userData.user.name : ""}`} id="name" onChange={handleChange} aria-describedby="emailHelp" />
               </div>
               <button type='submit' className='col-10 my-1 my-sm-0 col-sm-4 btn btn-primary'>Update</button>
             </div>
@@ -140,7 +139,9 @@ const Profile = () => {
           </div>
         </div>
         <div className="d-flex justify-content-around row">
+          {/* update password */}
           <button className='btn btn-primary my-1 my-sm-0 col-sm-5' onClick={editPasswordClick}>Change Password</button>
+          {/* delete account */}
           <button className='btn btn-danger my-1 my-sm-0 col-sm-5' onClick={handleDelete}>Delete Account</button>
         </div>
       </div>

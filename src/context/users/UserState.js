@@ -7,21 +7,17 @@ const UserState = (props) => {
     const [userData, setUserData] = useState([])
     const [showPassword, setShowPassword] = useState({ show: false, inputType: "password", iconClassText: "fa-eye" })
     // importing contexts
-    const useAlertContext = useContext(alertContext);
-    const { showAlert } = useAlertContext;
+    const { showAlert } = useContext(alertContext);
 
-
-    // show password function
+    // show password function       formating done
     const showPasswordFunc = () => {
         if (showPassword.show) setShowPassword({ show: false, inputType: "password", iconClassText: "fa-eye" })
         else setShowPassword({ show: true, inputType: "text", iconClassText: "fa-eye-slash" })
     }
 
-    // api call to login 
+    // api call to login            formating done
     const userLogin = async (email, password) => {
-        let headersList = {
-            "Content-Type": "application/json"
-        }
+        let headersList = { "Content-Type": "application/json" }
         let bodyContent = JSON.stringify({
             "email": email,
             "password": password
@@ -32,7 +28,7 @@ const UserState = (props) => {
             headers: headersList
         });
         let data = await response.json();
-        if (data) useAlertContext.showAlert(data.success === true ? "success" : "error", data.response)
+        if (data) showAlert(data.success === true ? "success" : "error", data.response)
         if (data.success) {
             // save the auth token in local storage and redirect to home page
             localStorage.setItem("token", data.authToken)
@@ -40,7 +36,7 @@ const UserState = (props) => {
         return data
     }
 
-    // api call to sign up user
+    // api call to sign up user     formating done
     const userSignUp = async (name, email, password) => {
         let headersList = { "Content-Type": "application/json" }
         let bodyContent = JSON.stringify({
@@ -54,14 +50,14 @@ const UserState = (props) => {
             headers: headersList
         });
         let data = await response.json();
-        if (data.success === true) useAlertContext.showAlert("success", "Account Created Successfully ")
-        else useAlertContext.showAlert("error", data.error)
+        if (data.success === true) showAlert("success", "Account Created Successfully ")
+        else showAlert("error", data.error)
         // save the auth token in local storage and redirect to home page
         if (data.success === true) localStorage.setItem("token", data.authToken)
         return data
     }
 
-    // api call to get user data (name)
+    // api call to get user data (name)     formating done
     const getUserData = async () => {
         let headersList = {
             "content-type": "application/json",
