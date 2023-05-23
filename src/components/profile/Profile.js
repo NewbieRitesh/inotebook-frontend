@@ -9,10 +9,18 @@ const Profile = () => {
   const [authPassword, setAuthPassword] = useState("")
   const [editItem, setEditItem] = useState("")
   const [credentials, setCredentials] = useState({ password: "", cpassword: "" })
+  const [warning, setWarning] = useState([])
 
   // imports of contexts
   const useUserContext = useContext(userContext)
-  const { getUserData, userData, setUserData, deleteUser, updateUserData, updateUserPassword, updateUserEmail, authenticateUser } = useUserContext;
+  const { getUserData,
+    userData,
+    setUserData,
+    deleteUser,
+    updateUserData,
+    updateUserPassword,
+    updateUserEmail,
+    authenticateUser } = useUserContext;
   // react Hooks
   const navigate = useNavigate()
   const conformPasswordRef = useRef()
@@ -52,14 +60,15 @@ const Profile = () => {
 
   // authentication of user
   const authenticateClick = async () => {
-    let response = await authenticateUser(authPassword)
+    let response = await authenticateUser(userData._id, authPassword)
     // authenticate password
     if (response.comparePasswords === true) {
+      setWarning([])
       closeModal.current.click()
       if (editItem === "email") openEditEmailRef.current.click()
       if (editItem === "password") openEditPasswordRef.current.click()
       if (editItem === "delete") deleteUserInDB()
-    } else console.log("Wrong Password")
+    } else setWarning({ ...warning, authenticateWarning: response.response })
   }
 
   // functions to edit email
@@ -75,7 +84,9 @@ const Profile = () => {
       setAuthPassword("");
       setUserData({ ...userData, email: response.email })
       setEditItem("")
+      setWarning([])
     }
+    else setWarning({ ...warning, availableEmailWarning: response.response })
   }
 
   // funtions to edit password
@@ -91,7 +102,8 @@ const Profile = () => {
       closeEditPasswordRef.current.click()
       setAuthPassword("");
       setEditItem("")
-    }
+      setWarning([])
+    } else setWarning({ ...warning, response: response.response })
   }
 
   // functions to delete user account
@@ -102,6 +114,8 @@ const Profile = () => {
   const deleteUserInDB = async () => {
     const response = await deleteUser(userData._id, authPassword)
     console.log(response)
+    localStorage.removeItem('token');
+    navigate('/login')
   }
 
   // function for testing 
@@ -119,7 +133,7 @@ const Profile = () => {
             <label htmlFor="name" className="form-label">Name:</label>
             <div className='d-flex row justify-content-center'>
               <div className='col-sm-8'>
-                <input type="text" name='name' className="form-control" value={`${userData.user.name ? userData.user.name : ""}`} id="name" onChange={handleChange} aria-describedby="emailHelp" />
+                <input type="text" name='name' className="form-control" value={`${userData.name ? userData.name : ""}`} id="name" onChange={handleChange} aria-describedby="emailHelp" />
               </div>
               <button type='submit' className='col-10 my-1 my-sm-0 col-sm-4 btn btn-primary'>Update</button>
             </div>
@@ -161,12 +175,13 @@ const Profile = () => {
               <div className="mb-3">
                 <label htmlFor="password" className="form-label">Password <br /><span style={{ fontSize: "13px" }}>{authPassword.length < 6 ? "password should be minimum of 6 characters" : ""}</span></label>
                 <input type={`${showPassword.inputType}`} name='password' value={authPassword} className="form-control" id="exampleInputPassword1" onChange={handleAuthPasswordChange} />
+                <span style={{ color: "red", fontSize: "13px" }}>{!warning.authenticateWarning ? "" : <>{warning.authenticateWarning} <br /></>}</span>
                 <span style={{ cursor: "pointer", fontSize: "14px" }} onClick={showPasswordFunc}><i className={`fa-regular ${showPassword.iconClassText}`} />{showPassword.show ? " Hide Password" : " Show Password"}</span>
               </div>
             </div>
             <div className="modal-footer">
               <button ref={closeModal} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" className="btn btn-primary" onClick={() => { authenticateClick(editItem) }}>Authenticate</button>
+              <button disabled={authPassword.length < 6} type="button" className="btn btn-primary" onClick={() => { authenticateClick(editItem) }}>Authenticate</button>
             </div>
           </div>
         </div>
@@ -185,6 +200,7 @@ const Profile = () => {
             </div>
             <div className="modal-body">
               <input type="email" name='emailEdit' className="form-control" value={`${userData.emailEdit ? userData.emailEdit : ""}`} id="email-edit" onChange={handleChange} aria-describedby="emailHelp" />
+              <span style={{ fontSize: "13px", color: "red" }}>{warning.availableEmailWarning}</span>
             </div>
             <div className="modal-footer">
               <button ref={closeEditEmailRef} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -214,6 +230,7 @@ const Profile = () => {
               <div className="mb-3">
                 <label htmlFor="cpassword" className="form-label">Conform Password <span className="text-danger" style={{ fontSize: "13px" }}>{credentials.password !== credentials.cpassword ? "password doesn't match" : ""}</span> </label>
                 <input type={`${showPassword.inputType}`} name='cpassword' className="form-control" id="cpassword" onChange={handleOnChangeCredentials} />
+                <span style={{ fontSize: "13px", color: "red" }}>{warning.response}</span>
               </div>
             </div>
             <div className="modal-footer">

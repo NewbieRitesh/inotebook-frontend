@@ -68,7 +68,7 @@ const UserState = (props) => {
             headers: headersList
         });
         let data = await response.json();
-        setUserData(data)
+        setUserData(data.user)
     }
 
     // api call to update user data (name)
@@ -85,13 +85,15 @@ const UserState = (props) => {
             body: bodyContent,
             headers: headersList
         });
+        let data = await response.json()
+        console.log(data);
         // showing alert when data will be updated
-        if (response.status === 200) showAlert("success", "Data Updated Successfully")
-        else showAlert("error", "Some error occur")
+        if(data.success === true) showAlert('success', 'Data Updated Successfully')
+        else showAlert('error', data.response)
     }
 
     // api call to authenticate user
-    const authenticateUser = async (authPassword) => {
+    const authenticateUser = async (id, authPassword) => {
         let headersList = {
             "auth-token": localStorage.getItem('token'),
             "Content-Type": "application/json"
@@ -99,7 +101,7 @@ const UserState = (props) => {
         let bodyContent = JSON.stringify({
             "password": authPassword
         });
-        let response = await fetch("http://localhost:1000/api/auth/authenticate/6453a5f69f1ec36802f7554c", {
+        let response = await fetch(`http://localhost:1000/api/auth/authenticate/${id}`, {
             method: "POST",
             body: bodyContent,
             headers: headersList
@@ -123,8 +125,9 @@ const UserState = (props) => {
             body: bodyContent,
             headers: headersList
         });
-        let data = await response.text();
-        return JSON.parse(data)
+        let data = await response.json();
+        if(data.success === true) showAlert('success', 'Email Updated Successfully')
+        return data
     }
 
     // api call to update user password
@@ -142,8 +145,9 @@ const UserState = (props) => {
             body: bodyContent,
             headers: headersList
         });
-        let data = await response.text();
-        return JSON.parse(data)
+        let data = await response.json();
+        if(data.success === true) showAlert('success', 'Password Updated Successfully')
+        return data
     }
 
     // api call to delete user 
@@ -160,8 +164,9 @@ const UserState = (props) => {
             body: bodyContent,
             headers: headersList
         })
-        let data = await response.text();
-        return JSON.parse(data)
+        let data = await response.json();
+        if (data.success === true) showAlert('success', 'Account has been deleted')
+        return data
     }
 
     return (

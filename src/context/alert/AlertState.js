@@ -10,10 +10,10 @@ const NoteState = (props) => {
         })
         setTimeout(() => {
             setAlert(null);
-        }, 2000);
+        }, 3000);
     }
     return (
-        <AlertContext.Provider value={{alert, showAlert}}>
+        <AlertContext.Provider value={{ alert, showAlert }}>
             {props.children}
         </AlertContext.Provider>
     )
