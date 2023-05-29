@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import userContext from '../../context/users/userContext';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
     // state declaration
@@ -31,6 +31,7 @@ const Login = () => {
                     <input type={`${showPassword.inputType}`} name='password' className="form-control" id="exampleInputPassword1" onChange={handleChange} />
                     <span style={{ cursor: "pointer", fontSize: "14px" }} onClick={showPasswordFunc}><i className={`fa-regular ${showPassword.iconClassText}`} />{showPassword.show ? " Hide Password" : " Show Password"}</span>
                 </div>
+                <Link className='text-decoration-none' to="/forgot-password">forgot password??</Link>
                 <button disabled={credentials.password.length < 6} type="submit" className="btn btn-primary" style={{ width: "100%" }} >LogIn</button>
             </div>
         </form>

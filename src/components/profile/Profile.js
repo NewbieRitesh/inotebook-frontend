@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import userContext from '../../context/users/userContext'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const Profile = () => {
 
@@ -168,7 +168,7 @@ const Profile = () => {
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h1 className="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+              <h1 className="modal-title fs-5" id="exampleModalLabel">authentication</h1>
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">
@@ -178,6 +178,7 @@ const Profile = () => {
                 <span style={{ color: "red", fontSize: "13px" }}>{!warning.authenticateWarning ? "" : <>{warning.authenticateWarning} <br /></>}</span>
                 <span style={{ cursor: "pointer", fontSize: "14px" }} onClick={showPasswordFunc}><i className={`fa-regular ${showPassword.iconClassText}`} />{showPassword.show ? " Hide Password" : " Show Password"}</span>
               </div>
+              <Link className='text-decoration-none' to="/forgot-password" onClick={() => closeModal.current.click()}>forgot password??</Link>
             </div>
             <div className="modal-footer">
               <button ref={closeModal} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -218,7 +219,7 @@ const Profile = () => {
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h1 className="modal-title fs-5" id="exampleModalLabel">Enter New Email</h1>
+              <h1 className="modal-title fs-5" id="exampleModalLabel">Enter New Password</h1>
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">

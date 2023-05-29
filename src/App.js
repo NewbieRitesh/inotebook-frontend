@@ -12,6 +12,7 @@ import Alert from "./components/Alert";
 import AlertState from "./context/alert/AlertState"
 import Profile from "./components/profile/Profile";
 import UserState from "./context/users/UserState";
+import ForgotPassword from "./components/ForgotPassword";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
               </Routes>
             </BrowserRouter>
           </NoteState>

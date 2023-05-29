@@ -9,13 +9,13 @@ const UserState = (props) => {
     // importing contexts
     const { showAlert } = useContext(alertContext);
 
-    // show password function       formating done
+    // show password function
     const showPasswordFunc = () => {
         if (showPassword.show) setShowPassword({ show: false, inputType: "password", iconClassText: "fa-eye" })
         else setShowPassword({ show: true, inputType: "text", iconClassText: "fa-eye-slash" })
     }
 
-    // api call to login            formating done
+    // api call to login
     const userLogin = async (email, password) => {
         let headersList = { "Content-Type": "application/json" }
         let bodyContent = JSON.stringify({
@@ -36,7 +36,7 @@ const UserState = (props) => {
         return data
     }
 
-    // api call to sign up user     formating done
+    // api call to sign up user
     const userSignUp = async (name, email, password) => {
         let headersList = { "Content-Type": "application/json" }
         let bodyContent = JSON.stringify({
@@ -51,13 +51,13 @@ const UserState = (props) => {
         });
         let data = await response.json();
         if (data.success === true) showAlert("success", "Account Created Successfully ")
-        else showAlert("error", data.error)
+        else showAlert("error", data.response)
         // save the auth token in local storage and redirect to home page
         if (data.success === true) localStorage.setItem("token", data.authToken)
         return data
     }
 
-    // api call to get user data (name)     formating done
+    // api call to get user data (name)
     const getUserData = async () => {
         let headersList = {
             "content-type": "application/json",
@@ -88,7 +88,7 @@ const UserState = (props) => {
         let data = await response.json()
         console.log(data);
         // showing alert when data will be updated
-        if(data.success === true) showAlert('success', 'Data Updated Successfully')
+        if (data.success === true) showAlert('success', 'Data Updated Successfully')
         else showAlert('error', data.response)
     }
 
@@ -126,7 +126,7 @@ const UserState = (props) => {
             headers: headersList
         });
         let data = await response.json();
-        if(data.success === true) showAlert('success', 'Email Updated Successfully')
+        if (data.success === true) showAlert('success', 'Email Updated Successfully')
         return data
     }
 
@@ -146,7 +146,7 @@ const UserState = (props) => {
             headers: headersList
         });
         let data = await response.json();
-        if(data.success === true) showAlert('success', 'Password Updated Successfully')
+        if (data.success === true) showAlert('success', 'Password Updated Successfully')
         return data
     }
 
@@ -169,8 +169,72 @@ const UserState = (props) => {
         return data
     }
 
+    // api calls to forget password
+    // call for send otp
+    const sendOTPToUpdatePassword = async (email) => {
+        let headersList = { "Content-Type": "application/json" }
+        let bodyContent = JSON.stringify({ "email": email });
+        let response = await fetch("http://localhost:1000/api/auth/forgot-password", {
+            method: "POST",
+            body: bodyContent,
+            headers: headersList
+        });
+        let data = await response.json();
+        return data
+    }
+    // call to verify otp
+    const verifyOTPToUpdatePassword = async (email, otp) => {
+        let headersList = { "Content-Type": "application/json" }
+        let bodyContent = JSON.stringify({
+            "email": email,
+            "userOTP": otp
+        });
+        let response = await fetch("http://localhost:1000/api/auth/verify-otp", {
+            method: "POST",
+            body: bodyContent,
+            headers: headersList
+        });
+        let data = await response.json();
+        return data
+    }
+    // call to create new password
+    const sendNewPasswordToUpdatePassword = async (email, newPassword) => {
+        let headersList = { "Content-Type": "application/json" }
+        let bodyContent = JSON.stringify({
+            "email": email,
+            "newPassword": newPassword
+        });
+        let response = await fetch("http://localhost:1000/api/auth/forgot-update-password", {
+            method: "PUT",
+            body: bodyContent,
+            headers: headersList
+        });
+        let data = await response.json();
+        console.log(data);
+        return data
+    }
     return (
-        <UserContext.Provider value={{ userLogin, userSignUp, getUserData, showPasswordFunc, showPassword, updateUserData, userData, updateUserPassword, setUserData, updateUserEmail, authenticateUser, deleteUser }}>
+        <UserContext.Provider value={{
+            // user related general functions
+            userLogin,
+            userSignUp,
+            getUserData,
+            showPasswordFunc,
+            showPassword,
+            // user data related states
+            userData,
+            setUserData,
+            // modifing user credentials related functions
+            updateUserData,
+            updateUserPassword,
+            updateUserEmail,
+            authenticateUser,
+            deleteUser,
+            // forgot password related functions
+            sendOTPToUpdatePassword,
+            verifyOTPToUpdatePassword,
+            sendNewPasswordToUpdatePassword
+        }}>
             {props.children}
         </UserContext.Provider>
     )
