@@ -1,7 +1,7 @@
 import { useState } from "react";
 import AlertContext from "./alertContext";
 
-const NoteState = (props) => {
+const AlertState = (props) => {
     const [alert, setAlert] = useState(null)
     const showAlert = (type, message) => {
         setAlert({
@@ -19,4 +19,4 @@ const NoteState = (props) => {
     )
 }
 
-export default NoteState;
+export default AlertState;

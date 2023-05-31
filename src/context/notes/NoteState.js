@@ -39,7 +39,8 @@ const NoteState = (props) => {
         });
         let data = await response.json();
         setNotes(notes.concat(data.response))
-        if (data) showAlert(data.success, data.response)
+        if (data.success === true) showAlert(data.success, "Note added Successfully")
+        else showAlert(data.success, data.response)
     }
 
     // update note
@@ -72,7 +73,8 @@ const NoteState = (props) => {
             }
             setNotes(newNotes);
         }
-        if (data) showAlert(data.success, data.response)
+        if (data.success === true) showAlert(data.success, "Note updated Successfully")
+        else showAlert(data.success, data.response)
     }
 
     // delete note
@@ -90,7 +92,8 @@ const NoteState = (props) => {
             const newNotes = notes.filter((notes) => { return notes._id !== id })
             setNotes(newNotes)
         }
-        showAlert(data.success, data.response)
+        if (data.success === true) showAlert(data.success, "Note deleted Successfully")
+        else showAlert(data.success, data.response)
     }
     return (
         <NoteContext.Provider value={{ notes, setNotes, addNote, editNote, deleteNote, getNotes }}>
