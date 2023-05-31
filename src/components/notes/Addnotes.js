@@ -1,19 +1,23 @@
 import React, { useContext, useState } from 'react'
 import noteContext from '../../context/notes/noteContext'
+import generalContext from '../../context/general/generalContext'
 
 const Addnotes = () => {
     const [note, setNote] = useState({ title: "", description: "", tags: "" })
     const [valiClass, setValiClass] = useState({ title: "d-none", description: "d-none" })
 
     const { addNote } = useContext(noteContext)
+    const { process, setProcess } = useContext(generalContext)
 
     const handleChange = (event) => {
         setNote({ ...note, [event.target.name]: event.target.value })
         setValiClass({ title: note.title.length < 3 ? "d-block" : "d-none", description: note.description.length < 3 ? "d-block" : "d-none" })
     }
-    const handleAddClick = (event) => {
+    const handleAddClick = async (event) => {
+        setProcess(true)
         event.preventDefault();
-        addNote(note.title, note.description, note.tags)
+        await addNote(note.title, note.description, note.tags)
+        setProcess(false)
     }
 
     return (
@@ -33,7 +37,7 @@ const Addnotes = () => {
                     <textarea className="form-control" id="description" name='description' rows="3" onChange={handleChange}></textarea>
                 </div>
                 <div className="col-12 mb-3">
-                    <button disabled={note.title.length < 3 || note.description.length < 3} type="submit" className="btn btn-primary" onClick={handleAddClick}>Add Note</button>
+                    <button disabled={process === true || note.title.length < 3 || note.description.length < 3} type="submit" className="btn btn-primary" onClick={handleAddClick}>Add Note</button>
                 </div>
             </form>
         </>

@@ -4,13 +4,16 @@ import App from './App';
 import './index.css'
 import "bootstrap-icons/font/bootstrap-icons.css";
 import reportWebVitals from './reportWebVitals';
+import GeneralState from './context/general/GeneralState';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <div className='d-flex flex-column' style={{ minHeight: "100vh" }}>
-      <App />
-    </div>
+    <GeneralState>
+      <div className='d-flex flex-column' style={{ minHeight: "100vh" }}>
+        <App />
+      </div>
+    </GeneralState>
   </React.StrictMode>
 );
 

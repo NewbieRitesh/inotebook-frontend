@@ -2,13 +2,13 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import noteContext from '../../context/notes/noteContext'
 import { Noteitem } from './Noteitem'
 import { useNavigate } from 'react-router-dom'
+import generalContext from '../../context/general/generalContext'
 const Notes = () => {
   const [valiClass, setValiClass] = useState({ title: "d-none", description: "d-none" })
   const [note, setNote] = useState({ id: "", etitle: "", edescription: "", etags: "" })
 
-  const context = useContext(noteContext)
-  const { notes, getNotes, editNote } = context
-
+  const { notes, getNotes, editNote } = useContext(noteContext)
+  const { process, setProcess } = useContext(generalContext)
   const edit = useRef(null)
   const close = useRef(null)
 
@@ -31,8 +31,10 @@ const Notes = () => {
     setValiClass({ title: note.etitle.length < 3 ? "d-block" : "d-none", description: note.edescription.length < 3 ? "d-block" : "d-none" })
   }
 
-  const handleUpdateClick = () => {
-    editNote(note.id, note.etitle, note.edescription, note.etags)
+  const handleUpdateClick = async () => {
+    setProcess(true)
+    await editNote(note.id, note.etitle, note.edescription, note.etags)
+    setProcess(false)
     close.current.click()
   }
 
@@ -68,7 +70,7 @@ const Notes = () => {
             </div>
             <div className="modal-footer">
               <button ref={close} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button disabled={note.etitle.length < 3 || note.edescription.length < 3} type="button" className="btn btn-primary" onClick={handleUpdateClick}>Save changes</button>
+              <button disabled={process === true || note.etitle.length < 3 || note.edescription.length < 3} type="button" className="btn btn-primary" onClick={handleUpdateClick}>Save changes</button>
             </div>
           </div>
         </div>
