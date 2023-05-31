@@ -8,7 +8,7 @@ export default function Alert() {
     return (
         <div style={{ height: '50px' }}>
             {alert &&
-                <div className={`alert alert-${alert.type === 'success' ? "success" : "danger"} alert-dismissible fade show`} role="alert">{alert.msg}</div>}
+                <div className={`alert alert-${alert.type === true ? "success" : "danger"} alert-dismissible fade show`} role="alert">{alert.msg}</div>}
         </div>
     )
 };

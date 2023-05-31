@@ -13,8 +13,8 @@ export const Noteitem = (props) => {
                 <div id="data">
                     <h5 className='overflow-hidden d-flex justify-content-between' style={{ margin: "auto" }}>{notes.title}
                         <div>
-                            <i title='Edit Note' className="text-primary fa-solid p-1 mx-1 fa-pen-to-square" style={{ cursor: "pointer" }} onClick={() => { updateNote(notes) }} />
-                            <i title='Delete Note' className="text-danger fa-sharp p-1 mx-1 fa-solid fa-trash" style={{ cursor: "pointer" }} onClick={() => { deleteNote(notes._id) }} />
+                            <i title='Edit Note' className="text-primary p-1 mx-1 bi bi-pencil-square" style={{ cursor: "pointer" }} onClick={() => { updateNote(notes) }} >  </i>
+                            <i title='Delete Note' className="text-danger p-1 mx-1 bi bi-trash3-fill" style={{ cursor: "pointer" }} onClick={() => { deleteNote(notes._id) }} />
                         </div>
                     </h5>
                     <p className='overflow-hidden' style={{ fontSize: "15px", margin: "auto" }}>{notes.description}</p>

@@ -1,4 +1,4 @@
-import Addnotes from "./Addnotes"
+import Addnotes from "./notes/Addnotes"
 import Notes from "./notes/Notes"
 
 const Home = () => {

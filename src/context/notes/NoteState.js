@@ -4,14 +4,12 @@ import alertContext from "../alert/alertContext";
 
 const NoteState = (props) => {
     const [notes, setNotes] = useState([])
-    const useAlertContext = useContext(alertContext)
-    const { showAlert } = useAlertContext
-    const host = "http://localhost:1000"
-
+    const { showAlert } = useContext(alertContext)
+    const BASE_URL = process.env.REACT_APP_BASE_URL;
 
     // get all notes
     const getNotes = async () => {
-        const response = await fetch(`${host}/api/notes/fetchnotes`, {
+        const response = await fetch(`${BASE_URL}api/notes/fetchnotes`, {
             method: "get",
             headers: {
                 "Content-Type": "application/json",
@@ -34,16 +32,14 @@ const NoteState = (props) => {
             "auth-token": localStorage.getItem('token')
         }
         let bodyContent = JSON.stringify(note);
-        let response = await fetch(`${host}/api/notes/addnote`, {
+        let response = await fetch(`${BASE_URL}api/notes/addnote`, {
             method: "POST",
             body: bodyContent,
             headers: headersList
         });
         let data = await response.json();
-        console.log(data)
         setNotes(notes.concat(data.response))
-        if (data.success === true) showAlert("success", "Note added Successfully")
-        else showAlert("error", data.response)
+        if (data) showAlert(data.success, data.response)
     }
 
     // update note
@@ -57,44 +53,44 @@ const NoteState = (props) => {
             "description": description,
             "tag": tag
         });
-        let response = await fetch(`${host}/api/notes/updatenote/${id}`, {
+        let response = await fetch(`${BASE_URL}api/notes/updatenote/${id}`, {
             method: "PUT",
             body: bodyContent,
             headers: headersList
         });
         let data = await response.json()
-        console.log(data);
-        let newNotes = JSON.parse(JSON.stringify(notes))
-        for (let index = 0; index < newNotes.length; index++) {
-            const element = newNotes[index];
-            if (element._id === id) {
-                newNotes[index].title = title;
-                newNotes[index].description = description;
-                newNotes[index].tag = tag;
-                break;
+        if (data.success === true) {
+            let newNotes = JSON.parse(JSON.stringify(notes))
+            for (let index = 0; index < newNotes.length; index++) {
+                const element = newNotes[index];
+                if (element._id === id) {
+                    newNotes[index].title = title;
+                    newNotes[index].description = description;
+                    newNotes[index].tag = tag;
+                    break;
+                }
             }
+            setNotes(newNotes);
         }
-        setNotes(newNotes);
-        if (data.success === true) showAlert("success", "Note updated Successfully")
-        else showAlert("error", data.response)
+        if (data) showAlert(data.success, data.response)
     }
 
     // delete note
     const deleteNote = async (id) => {
-        const newNotes = notes.filter((notes) => { return notes._id !== id })
-        setNotes(newNotes)
         let headersList = {
             "Content-Type": "application/json",
             "auth-token": localStorage.getItem('token')
         }
-        let response = await fetch(`${host}/api/notes/deletenote/${id}`, {
+        let response = await fetch(`${BASE_URL}api/notes/deletenote/${id}`, {
             method: "DELETE",
             headers: headersList
         });
         let data = await response.json()
-        console.log(data);
-        if (data.success === true) showAlert("success", "Note deleted Successfully")
-        else showAlert("error", data.response)
+        if (data.success === true) {
+            const newNotes = notes.filter((notes) => { return notes._id !== id })
+            setNotes(newNotes)
+        }
+        showAlert(data.success, data.response)
     }
     return (
         <NoteContext.Provider value={{ notes, setNotes, addNote, editNote, deleteNote, getNotes }}>

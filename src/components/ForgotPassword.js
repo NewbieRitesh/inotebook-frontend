@@ -62,7 +62,6 @@ const ForgotPassword = () => {
     // function to change password
     const createPassword = async () => {
         setLoading(true)
-        console.log("password updated")
         let data = await sendNewPasswordToUpdatePassword(credentials.email, credentials.newPassword)
         if (data.success === true) {
             setProgressPage({ ...progressPage, progress: 100 })

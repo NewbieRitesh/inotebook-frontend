@@ -3,16 +3,15 @@ import UserContext from './userContext'
 import alertContext from '../alert/alertContext'
 
 const UserState = (props) => {
-    // initilization of states
+    const BASE_URL = process.env.REACT_APP_BASE_URL;
     const [userData, setUserData] = useState([])
-    const [showPassword, setShowPassword] = useState({ show: false, inputType: "password", iconClassText: "fa-eye" })
-    // importing contexts
+    const [showPassword, setShowPassword] = useState({ show: false, inputType: "password", iconClassText: "bi bi-eye-fill" })
     const { showAlert } = useContext(alertContext);
 
     // show password function
     const showPasswordFunc = () => {
-        if (showPassword.show) setShowPassword({ show: false, inputType: "password", iconClassText: "fa-eye" })
-        else setShowPassword({ show: true, inputType: "text", iconClassText: "fa-eye-slash" })
+        if (showPassword.show) setShowPassword({ show: false, inputType: "password", iconClassText: "bi bi-eye-fill" })
+        else setShowPassword({ show: true, inputType: "text", iconClassText: "bi bi-eye-slash-fill" })
     }
 
     // api call to login
@@ -22,17 +21,15 @@ const UserState = (props) => {
             "email": email,
             "password": password
         });
-        let response = await fetch("http://localhost:1000/api/auth/login", {
+        let response = await fetch(`${BASE_URL}api/auth/login`, {
             method: "POST",
             body: bodyContent,
             headers: headersList
         });
         let data = await response.json();
-        if (data) showAlert(data.success === true ? "success" : "error", data.response)
-        if (data.success) {
-            // save the auth token in local storage and redirect to home page
-            localStorage.setItem("token", data.authToken)
-        }
+        if (data) showAlert(data.success, data.response)
+        // save the auth token in local storage and redirect to home page
+        if (data.success) localStorage.setItem("token", data.authToken)
         return data
     }
 
@@ -44,14 +41,13 @@ const UserState = (props) => {
             "email": email,
             "password": password
         });
-        let response = await fetch("http://localhost:1000/api/auth/createuser", {
+        let response = await fetch(`${BASE_URL}api/auth/createuser`, {
             method: "POST",
             body: bodyContent,
             headers: headersList
         });
         let data = await response.json();
-        if (data.success === true) showAlert("success", "Account Created Successfully ")
-        else showAlert("error", data.response)
+        if (data) showAlert(data.success, data.response)
         // save the auth token in local storage and redirect to home page
         if (data.success === true) localStorage.setItem("token", data.authToken)
         return data
@@ -63,7 +59,7 @@ const UserState = (props) => {
             "content-type": "application/json",
             "auth-token": localStorage.getItem('token')
         }
-        let response = await fetch("http://localhost:1000/api/auth/getuser", {
+        let response = await fetch(`${BASE_URL}api/auth/getuser`, {
             method: "POST",
             headers: headersList
         });
@@ -80,16 +76,14 @@ const UserState = (props) => {
         let bodyContent = JSON.stringify({
             "name": newName,
         });
-        let response = await fetch(`http://localhost:1000/api/auth/update-user-data/${id}`, {
+        let response = await fetch(`${BASE_URL}api/auth/update-user-data/${id}`, {
             method: "PUT",
             body: bodyContent,
             headers: headersList
         });
         let data = await response.json()
-        console.log(data);
         // showing alert when data will be updated
-        if (data.success === true) showAlert('success', 'Data Updated Successfully')
-        else showAlert('error', data.response)
+        if (data) showAlert(data.success, data.response)
     }
 
     // api call to authenticate user
@@ -101,7 +95,7 @@ const UserState = (props) => {
         let bodyContent = JSON.stringify({
             "password": authPassword
         });
-        let response = await fetch(`http://localhost:1000/api/auth/authenticate/${id}`, {
+        let response = await fetch(`${BASE_URL}api/auth/authenticate/${id}`, {
             method: "POST",
             body: bodyContent,
             headers: headersList
@@ -120,7 +114,7 @@ const UserState = (props) => {
             "email": email,
             "authPassword": authPassword
         });
-        let response = await fetch(`http://localhost:1000/api/auth/update-user-email/${id}`, {
+        let response = await fetch(`${BASE_URL}api/auth/update-user-email/${id}`, {
             method: "PUT",
             body: bodyContent,
             headers: headersList
@@ -140,7 +134,7 @@ const UserState = (props) => {
             "newPassword": newPassword,
             "authPassword": authPassword
         });
-        let response = await fetch(`http://localhost:1000/api/auth/update-user-password/${id}`, {
+        let response = await fetch(`${BASE_URL}api/auth/update-user-password/${id}`, {
             method: "PUT",
             body: bodyContent,
             headers: headersList
@@ -159,7 +153,7 @@ const UserState = (props) => {
         let bodyContent = JSON.stringify({
             "authPassword": authPassword
         });
-        let response = await fetch(`http://localhost:1000/api/auth/delete-user/${id}`, {
+        let response = await fetch(`${BASE_URL}api/auth/delete-user/${id}`, {
             method: "DELETE",
             body: bodyContent,
             headers: headersList
@@ -174,12 +168,13 @@ const UserState = (props) => {
     const sendOTPToUpdatePassword = async (email) => {
         let headersList = { "Content-Type": "application/json" }
         let bodyContent = JSON.stringify({ "email": email });
-        let response = await fetch("http://localhost:1000/api/auth/forgot-password", {
+        let response = await fetch(`${BASE_URL}api/auth/forgot-password`, {
             method: "POST",
             body: bodyContent,
             headers: headersList
         });
         let data = await response.json();
+        if (data.success === true) showAlert(data.success, data.response)
         return data
     }
     // call to verify otp
@@ -189,12 +184,13 @@ const UserState = (props) => {
             "email": email,
             "userOTP": otp
         });
-        let response = await fetch("http://localhost:1000/api/auth/verify-otp", {
+        let response = await fetch(`${BASE_URL}api/auth/verify-otp`, {
             method: "POST",
             body: bodyContent,
             headers: headersList
         });
         let data = await response.json();
+        if (data.success === true) showAlert(data.success, data.response)
         return data
     }
     // call to create new password
@@ -204,13 +200,13 @@ const UserState = (props) => {
             "email": email,
             "newPassword": newPassword
         });
-        let response = await fetch("http://localhost:1000/api/auth/forgot-update-password", {
+        let response = await fetch(`${BASE_URL}api/auth/forgot-update-password`, {
             method: "PUT",
             body: bodyContent,
             headers: headersList
         });
         let data = await response.json();
-        console.log(data);
+        if (data.success === true) showAlert(data.success, data.response)
         return data
     }
     return (

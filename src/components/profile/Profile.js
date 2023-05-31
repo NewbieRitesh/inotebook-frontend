@@ -45,7 +45,6 @@ const Profile = () => {
   // function to update user data like name
   const handleUpdateUserData = async (event) => {
     event.preventDefault()
-    console.log(userData);
     await updateUserData(userData._id, userData.name)
   }
 
@@ -78,7 +77,6 @@ const Profile = () => {
   }
   const updateEmailInDB = async () => {
     const response = await updateUserEmail(userData._id, userData.emailEdit, authPassword)
-    console.log(response);
     if (response.success === true) {
       closeEditEmailRef.current.click()
       setAuthPassword("");
@@ -91,13 +89,11 @@ const Profile = () => {
 
   // funtions to edit password
   const editPasswordClick = async () => {
-    console.log("handlePasswordChange");
     setEditItem("password")
     conformPasswordRef.current.click();
   }
   const updatePasswordInDB = async () => {
     const response = await updateUserPassword(userData._id, credentials.password, authPassword)
-    console.log(response);
     if (response.success === true) {
       closeEditPasswordRef.current.click()
       setAuthPassword("");
@@ -113,14 +109,8 @@ const Profile = () => {
   }
   const deleteUserInDB = async () => {
     const response = await deleteUser(userData._id, authPassword)
-    console.log(response)
-    localStorage.removeItem('token');
+    if (response.success === true) localStorage.removeItem('token');
     navigate('/login')
-  }
-
-  // function for testing 
-  const consoleFun = () => {
-    console.log(userData);
   }
 
   return (
@@ -159,7 +149,6 @@ const Profile = () => {
           <button className='btn btn-danger my-1 my-sm-0 col-sm-5' onClick={handleDelete}>Delete Account</button>
         </div>
       </div>
-      <button onClick={consoleFun}>test</button>
       {/* conform Password Modal */}
       <button type="button" ref={conformPasswordRef} className="d-none" data-bs-toggle="modal" data-bs-target="#exampleModalauth">
         Launch demo modal
@@ -176,7 +165,7 @@ const Profile = () => {
                 <label htmlFor="password" className="form-label">Password <br /><span style={{ fontSize: "13px" }}>{authPassword.length < 6 ? "password should be minimum of 6 characters" : ""}</span></label>
                 <input type={`${showPassword.inputType}`} name='password' value={authPassword} className="form-control" id="exampleInputPassword1" onChange={handleAuthPasswordChange} />
                 <span style={{ color: "red", fontSize: "13px" }}>{!warning.authenticateWarning ? "" : <>{warning.authenticateWarning} <br /></>}</span>
-                <span style={{ cursor: "pointer", fontSize: "14px" }} onClick={showPasswordFunc}><i className={`fa-regular ${showPassword.iconClassText}`} />{showPassword.show ? " Hide Password" : " Show Password"}</span>
+                <span style={{ cursor: "pointer", fontSize: "14px" }} onClick={showPasswordFunc}><i className={`${showPassword.iconClassText}`} />{showPassword.show ? " Hide Password" : " Show Password"}</span>
               </div>
               <Link className='text-decoration-none' to="/forgot-password" onClick={() => closeModal.current.click()}>forgot password??</Link>
             </div>
@@ -226,7 +215,7 @@ const Profile = () => {
               <div className="mb-3">
                 <label htmlFor="password" className="form-label">Password <br /><span style={{ fontSize: "13px" }}>{credentials.password.length < 6 ? "password should be minimum of 6 characters" : ""}</span></label>
                 <input required type={`${showPassword.inputType}`} name='password' className="form-control" id="password" onChange={handleOnChangeCredentials} />
-                <span style={{ cursor: "pointer", fontSize: "14px" }} onClick={showPasswordFunc}><i className={`fa-regular ${showPassword.iconClassText}`} />{showPassword.show ? " Hide Password" : " Show Password"}</span>
+                <span style={{ cursor: "pointer", fontSize: "14px" }} onClick={showPasswordFunc}><i className={`${showPassword.iconClassText}`} />{showPassword.show ? " Hide Password" : " Show Password"}</span>
               </div>
               <div className="mb-3">
                 <label htmlFor="cpassword" className="form-label">Conform Password <span className="text-danger" style={{ fontSize: "13px" }}>{credentials.password !== credentials.cpassword ? "password doesn't match" : ""}</span> </label>

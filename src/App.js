@@ -1,7 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 // componentes
 import About from "./components/About";
-import Contact from "./components/Contact";
 import Help from "./components/Help";
 import Home from "./components/Home";
 import Navbar from "./components/Navbar";
@@ -26,7 +25,6 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
                 <Route path="/help" element={<Help />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
