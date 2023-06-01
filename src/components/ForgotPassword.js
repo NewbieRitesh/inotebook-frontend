@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react'
 import userContext from '../context/users/userContext'
 import { useNavigate } from 'react-router-dom'
 import alertContext from '../context/alert/alertContext'
+import generalContext from '../context/general/generalContext'
 
 const ForgotPassword = () => {
     // declaring contexts
@@ -18,7 +19,7 @@ const ForgotPassword = () => {
     const initialProgressObj = { pageNo: 1, pageName: "email", submitBtnValue: "Send OTP", progress: 0 }
     const [credentials, setCredentials] = useState({ email: "", otp: "", newPassword: "", confirmNewPassword: "" })
     const [progressPage, setProgressPage] = useState(initialProgressObj)
-    const [loading, setLoading] = useState(false)
+    const { process } = useContext(generalContext)
     const [warning, setWarning] = useState("")
     const navigate = useNavigate()
 
@@ -33,45 +34,38 @@ const ForgotPassword = () => {
     // handling submit button click
     const callFunction = (event) => {
         event.preventDefault()
-        if (loading === true) setWarning("Please wait")
-        else if (progressPage.pageNo === 1) sendOTP()
+        if (progressPage.pageNo === 1) sendOTP()
         else if (progressPage.pageNo === 2) submitOTP()
         else if (progressPage.pageNo === 3) createPassword()
     }
 
     // function to send otp to user email
     const sendOTP = async () => {
-        setLoading(true)
         let data = await sendOTPToUpdatePassword(credentials.email)
         if (data.success === true) {
             setProgressPage({ pageNo: 2, pageName: "otp", submitBtnValue: "Submit OTP", progress: 33 })
             setWarning("")
         } else setWarning(data.response)
-        setLoading(false)
     }
     // function to verify otp
     const submitOTP = async () => {
-        setLoading(true)
         let data = await verifyOTPToUpdatePassword(credentials.email, credentials.otp)
         if (data.success === true) {
             setProgressPage({ pageNo: 3, pageName: "create-password", submitBtnValue: "Change Password", progress: 66 })
             setWarning("")
         } else setWarning(data.response)
-        setLoading(false)
     }
     // function to change password
     const createPassword = async () => {
-        setLoading(true)
         let data = await sendNewPasswordToUpdatePassword(credentials.email, credentials.newPassword)
         if (data.success === true) {
             setProgressPage({ ...progressPage, progress: 100 })
-            showAlert("success", `${data.response}, and you are navigating to ${localStorage.getItem('token') ? "home" : "login"} page in 3 second`)
+            showAlert(data.success, data.response)
             setTimeout(async () => {
                 navigate('/')
                 setProgressPage(initialProgressObj)
             }, 3000);
         } else setWarning(data.response)
-        setLoading(false)
     }
 
     return (
@@ -107,11 +101,10 @@ const ForgotPassword = () => {
                                 </> : ""}
                                 <span>{warning}</span>
                                 <div className="my-3 position-relative d-flex justify-content-end">
-                                    {loading === true ? <div className='position-absolute top-50 start-50 translate-middle'>
-                                        <span style={{ fontSize: "13px" }}>please wait</span>
-                                        <img src="img/loader.gif" alt="Loading" style={{ height: "100px", width: "100px" }} />
+                                    {process === true ? <div className='position-absolute top-50 start-50 translate-middle'>
+                                        <img src="img/loader.gif" alt="Loading" style={{ height: "100px", width: "100px" }} /> <br />
                                     </div> : ""}
-                                    <button disabled={loading === true || progressPage.pageNo === 3 ? credentials.newPassword.length < 6 || credentials.newPassword !== credentials.confirmNewPassword : "" || progressPage.pageNo === 2 ? credentials.otp.length < 6 : ""} type="submit" className="btn btn-primary">{progressPage.submitBtnValue}</button>
+                                    <button disabled={process === true || progressPage.pageNo === 3 ? credentials.newPassword.length < 6 || credentials.newPassword !== credentials.confirmNewPassword : "" || progressPage.pageNo === 2 ? credentials.otp.length < 6 : ""} type="submit" className="btn btn-primary">{process === true ? "please wait" : progressPage.submitBtnValue}</button>
                                 </div>
                             </div>
                         </form>

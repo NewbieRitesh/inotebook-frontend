@@ -1,14 +1,15 @@
 import React, { useContext, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import userContext from '../../context/users/userContext';
+import generalContext from '../../context/general/generalContext';
 
 const Signup = () => {
   // hooks declaration
   const [credentials, setCredentials] = useState({ name: "", email: "", password: "", cpassword: "" })
   const navigate = useNavigate();
   // importing and destructing contexts
-  const useUserContext = useContext(userContext)
-  const { userSignUp, showPassword, showPasswordFunc } = useUserContext
+  const { userSignUp, showPassword, showPasswordFunc } = useContext(userContext)
+  const { process } = useContext(generalContext)
 
   // handling input change and clicks
   const handleChange = async (event) => setCredentials({ ...credentials, [event.target.name]: event.target.value })
@@ -39,7 +40,10 @@ const Signup = () => {
           <label htmlFor="cpassword" className="form-label">Conform Password <span className="text-danger" style={{ fontSize: "13px" }}>{credentials.password !== credentials.cpassword ? "password doesn't match" : ""}</span> </label>
           <input type={`${showPassword.inputType}`} name='cpassword' className="form-control" id="cpassword" onChange={handleChange} />
         </div>
-        <button disabled={credentials.password !== credentials.cpassword || !credentials.email || credentials.name.length < 3} type="submit" className="btn btn-primary" style={{ width: "100%" }}>SignUp</button>
+        <button disabled={process === true || credentials.password !== credentials.cpassword || !credentials.email || credentials.name.length < 3} type="submit" className="btn btn-primary my-2" style={{ width: "100%" }}>SignUp</button>
+        <div className="text-center d-block">
+          <Link className='text-decoration-none' to="/login">already have account?<br />login</Link>
+        </div>
       </div>
     </form>
   )

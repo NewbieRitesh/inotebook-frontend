@@ -1,11 +1,13 @@
 import React, { useContext, useState } from 'react'
 import userContext from '../../context/users/userContext';
 import { Link, useNavigate } from 'react-router-dom';
+import generalContext from '../../context/general/generalContext';
 
 const Login = () => {
     // state declaration
     const [credentials, setCredentials] = useState({ email: "", password: "" })
     const { userLogin, showPasswordFunc, showPassword } = useContext(userContext);
+    const { process } = useContext(generalContext)
     const navigate = useNavigate();
 
     // handling user inputs and login click
@@ -29,10 +31,14 @@ const Login = () => {
                     <input type={`${showPassword.inputType}`} name='password' className="form-control" id="exampleInputPassword1" onChange={handleChange} />
                     <span style={{ cursor: "pointer", fontSize: "14px" }} onClick={showPasswordFunc}><i className={`${showPassword.iconClassText}`} />{showPassword.show ? " Hide Password" : " Show Password"}</span>
                 </div>
-                <Link className='text-decoration-none' to="/forgot-password">forgot password??</Link>
-                <button disabled={credentials.password.length < 6} type="submit" className="btn btn-primary" style={{ width: "100%" }} >LogIn</button>
+                <Link className='text-decoration-none mb-5' to="/forgot-password">forgot password??</Link>
+                <button disabled={process === true || credentials.password.length < 6} type="submit" className=" mt-2 mb-2 btn btn-primary" style={{ width: "100%" }} >LogIn</button>
+                <div className="text-center d-block">
+                    <Link className='text-decoration-none' to="/signup">do not have account?<br />sign up</Link>
+                </div>
             </div>
         </form>
+
     )
 }
 

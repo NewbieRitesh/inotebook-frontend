@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import userContext from '../../context/users/userContext'
+import generalContext from '../../context/general/generalContext'
 import { Link, useNavigate } from 'react-router-dom'
 
 const Profile = () => {
@@ -21,6 +22,7 @@ const Profile = () => {
     updateUserPassword,
     updateUserEmail,
     authenticateUser } = useUserContext;
+  const { process } = useContext(generalContext)
   // react Hooks
   const navigate = useNavigate()
   const conformPasswordRef = useRef()
@@ -115,6 +117,7 @@ const Profile = () => {
 
   return (
     <div className="d-flex flex-column justify-content-center align-items-center" style={{ flex: "1" }}>
+      {/* profile */}
       <div className='border custome-form-width border-dark m-2 p-4 rounded bg-body-secondary'>
         {/* update user data */}
         <form onSubmit={handleUpdateUserData}>
@@ -125,7 +128,7 @@ const Profile = () => {
               <div className='col-sm-8'>
                 <input type="text" name='name' className="form-control" value={`${userData.name ? userData.name : ""}`} id="name" onChange={handleChange} aria-describedby="emailHelp" />
               </div>
-              <button type='submit' className='col-10 my-1 my-sm-0 col-sm-4 btn btn-primary'>Update</button>
+              <button disabled={process === true} type='submit' className='col-10 my-1 my-sm-0 col-sm-4 btn btn-primary'>Update</button>
             </div>
           </div>
         </form>
@@ -138,99 +141,100 @@ const Profile = () => {
               <div className='col-sm-8'>
                 <input disabled type="email" name='email' className="form-control" value={`${userData.email ? userData.email : ""}`} id="email" onChange={handleChange} aria-describedby="emailHelp" />
               </div>
-              <button className='col-10 my-1 my-sm-0 col-sm-4 btn btn-primary' onClick={editEmailClick} type="submit">Edit Email</button>
+              <button disabled={process === true} className='col-10 my-1 my-sm-0 col-sm-4 btn btn-primary' onClick={editEmailClick} type="submit">Edit Email</button>
             </div>
           </div>
         </div>
         <div className="d-flex justify-content-around row">
           {/* update password */}
-          <button className='btn btn-primary my-1 my-sm-0 col-sm-5' onClick={editPasswordClick}>Change Password</button>
+          <button disabled={process === true} className='btn btn-primary my-1 my-sm-0 col-sm-5' onClick={editPasswordClick}>Change Password</button>
           {/* delete account */}
-          <button className='btn btn-danger my-1 my-sm-0 col-sm-5' onClick={handleDelete}>Delete Account</button>
-        </div>
-      </div>
-      {/* conform Password Modal */}
-      <button type="button" ref={conformPasswordRef} className="d-none" data-bs-toggle="modal" data-bs-target="#exampleModalauth">
-        Launch demo modal
-      </button>
-      <div className="modal fade" id="exampleModalauth" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h1 className="modal-title fs-5" id="exampleModalLabel">authentication</h1>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div className="modal-body">
-              <div className="mb-3">
-                <label htmlFor="password" className="form-label">Password <br /><span style={{ fontSize: "13px" }}>{authPassword.length < 6 ? "password should be minimum of 6 characters" : ""}</span></label>
-                <input type={`${showPassword.inputType}`} name='password' value={authPassword} className="form-control" id="exampleInputPassword1" onChange={handleAuthPasswordChange} />
-                <span style={{ color: "red", fontSize: "13px" }}>{!warning.authenticateWarning ? "" : <>{warning.authenticateWarning} <br /></>}</span>
-                <span style={{ cursor: "pointer", fontSize: "14px" }} onClick={showPasswordFunc}><i className={`${showPassword.iconClassText}`} />{showPassword.show ? " Hide Password" : " Show Password"}</span>
-              </div>
-              <Link className='text-decoration-none' to="/forgot-password" onClick={() => closeModal.current.click()}>forgot password??</Link>
-            </div>
-            <div className="modal-footer">
-              <button ref={closeModal} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button disabled={authPassword.length < 6} type="button" className="btn btn-primary" onClick={() => { authenticateClick(editItem) }}>Authenticate</button>
-            </div>
-          </div>
+          <button disabled={process === true} className='btn btn-danger my-1 my-sm-0 col-sm-5' onClick={handleDelete}>Delete Account</button>
         </div>
       </div>
 
-      {/* edit email modal */}
-      <button ref={openEditEmailRef} type="button" className="d-none" data-bs-toggle="modal" data-bs-target="#newEmailModal">
-        Launch demo modal
-      </button>
-      <div className="modal fade" id="newEmailModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h1 className="modal-title fs-5" id="exampleModalLabel">Enter New Email</h1>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div className="modal-body">
-              <input type="email" name='emailEdit' className="form-control" value={`${userData.emailEdit ? userData.emailEdit : ""}`} id="email-edit" onChange={handleChange} aria-describedby="emailHelp" />
-              <span style={{ fontSize: "13px", color: "red" }}>{warning.availableEmailWarning}</span>
-            </div>
-            <div className="modal-footer">
-              <button ref={closeEditEmailRef} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" className="btn btn-primary" onClick={updateEmailInDB}>Update Email</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* new password modal */}
-      <button ref={openEditPasswordRef} type="button" className="d-none" data-bs-toggle="modal" data-bs-target="#newPasswordModal">
-        Launch demo modal
-      </button>
-      <div className="modal fade" id="newPasswordModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h1 className="modal-title fs-5" id="exampleModalLabel">Enter New Password</h1>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div className="modal-body">
-              <div className="mb-3">
-                <label htmlFor="password" className="form-label">Password <br /><span style={{ fontSize: "13px" }}>{credentials.password.length < 6 ? "password should be minimum of 6 characters" : ""}</span></label>
-                <input required type={`${showPassword.inputType}`} name='password' className="form-control" id="password" onChange={handleOnChangeCredentials} />
-                <span style={{ cursor: "pointer", fontSize: "14px" }} onClick={showPasswordFunc}><i className={`${showPassword.iconClassText}`} />{showPassword.show ? " Hide Password" : " Show Password"}</span>
-              </div>
-              <div className="mb-3">
-                <label htmlFor="cpassword" className="form-label">Conform Password <span className="text-danger" style={{ fontSize: "13px" }}>{credentials.password !== credentials.cpassword ? "password doesn't match" : ""}</span> </label>
-                <input type={`${showPassword.inputType}`} name='cpassword' className="form-control" id="cpassword" onChange={handleOnChangeCredentials} />
-                <span style={{ fontSize: "13px", color: "red" }}>{warning.response}</span>
+      {/* Modals */}
+      <>
+        {/* conform Password Modal */}
+        <>
+          <button type="button" ref={conformPasswordRef} className="d-none" data-bs-toggle="modal" data-bs-target="#exampleModalauth">authentication modal</button>
+          <div className="modal fade" id="exampleModalauth" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h1 className="modal-title fs-5" id="exampleModalLabel">authentication</h1>
+                  <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div className="modal-body">
+                  <div className="mb-3">
+                    <label htmlFor="password" className="form-label">Password <br /><span style={{ fontSize: "13px" }}>{authPassword.length < 6 ? "password should be minimum of 6 characters" : ""}</span></label>
+                    <input type={`${showPassword.inputType}`} name='password' value={authPassword} className="form-control" id="exampleInputPassword1" onChange={handleAuthPasswordChange} />
+                    <span style={{ color: "red", fontSize: "13px" }}>{!warning.authenticateWarning ? "" : <>{warning.authenticateWarning} <br /></>}</span>
+                    <span style={{ cursor: "pointer", fontSize: "14px" }} onClick={showPasswordFunc}><i className={`${showPassword.iconClassText}`} />{showPassword.show ? " Hide Password" : " Show Password"}</span>
+                  </div>
+                  <Link className='text-decoration-none' to="/forgot-password" onClick={() => closeModal.current.click()}>forgot password??</Link>
+                </div>
+                <div className="modal-footer">
+                  <button ref={closeModal} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button disabled={authPassword.length < 6} type="button" className="btn btn-primary" onClick={() => { authenticateClick(editItem) }}>Authenticate</button>
+                </div>
               </div>
             </div>
-            <div className="modal-footer">
-              <button ref={closeEditPasswordRef} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" className="btn btn-primary" onClick={updatePasswordInDB}>Update Password</button>
+          </div>
+        </>
+        {/* edit email modal */}
+        <>
+          <button ref={openEditEmailRef} type="button" className="d-none" data-bs-toggle="modal" data-bs-target="#newEmailModal">Enter new email</button>
+          <div className="modal fade" id="newEmailModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h1 className="modal-title fs-5" id="exampleModalLabel">Enter New Email</h1>
+                  <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div className="modal-body">
+                  <input type="email" name='emailEdit' className="form-control" value={`${userData.emailEdit ? userData.emailEdit : ""}`} id="email-edit" onChange={handleChange} aria-describedby="emailHelp" />
+                  <span style={{ fontSize: "13px", color: "red" }}>{warning.availableEmailWarning}</span>
+                </div>
+                <div className="modal-footer">
+                  <button ref={closeEditEmailRef} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" className="btn btn-primary" onClick={updateEmailInDB}>Update Email</button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-
+        </>
+        {/* new password modal */}
+        <>
+          <button ref={openEditPasswordRef} type="button" className="d-none" data-bs-toggle="modal" data-bs-target="#newPasswordModal">Enter New Password</button>
+          <div className="modal fade" id="newPasswordModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h1 className="modal-title fs-5" id="exampleModalLabel">Enter New Password</h1>
+                  <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div className="modal-body">
+                  <div className="mb-3">
+                    <label htmlFor="password" className="form-label">Password <br /><span style={{ fontSize: "13px" }}>{credentials.password.length < 6 ? "password should be minimum of 6 characters" : ""}</span></label>
+                    <input required type={`${showPassword.inputType}`} name='password' className="form-control" id="password" onChange={handleOnChangeCredentials} />
+                    <span style={{ cursor: "pointer", fontSize: "14px" }} onClick={showPasswordFunc}><i className={`${showPassword.iconClassText}`} />{showPassword.show ? " Hide Password" : " Show Password"}</span>
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="cpassword" className="form-label">Conform Password <span className="text-danger" style={{ fontSize: "13px" }}>{credentials.password !== credentials.cpassword ? "password doesn't match" : ""}</span> </label>
+                    <input type={`${showPassword.inputType}`} name='cpassword' className="form-control" id="cpassword" onChange={handleOnChangeCredentials} />
+                    <span style={{ fontSize: "13px", color: "red" }}>{warning.response}</span>
+                  </div>
+                </div>
+                <div className="modal-footer">
+                  <button ref={closeEditPasswordRef} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" className="btn btn-primary" onClick={updatePasswordInDB}>Update Password</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      </>
     </div >
   )
 }
