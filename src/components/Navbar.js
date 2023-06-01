@@ -1,8 +1,24 @@
 import React from 'react'
 import { useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { darkMode, lightMode, modeStyle } from '../redux/reducer/darkModeReducer'
+import { useState } from 'react'
 
 const Navbar = () => {
+  const dispatch = useDispatch()
+  const [setMode, setSetMode] = useState('light')
+  const mode = useSelector(modeStyle)
+  const changeMode = () => {
+    if (setMode === 'light') {
+      setSetMode('dark')
+      dispatch(darkMode())
+    }
+    else if (setMode === 'dark') {
+      setSetMode('light')
+      dispatch(lightMode())
+    }
+  }
   const toggleClose = useRef()
   const navigate = useNavigate()
   const handleLogout = () => {
@@ -13,11 +29,17 @@ const Navbar = () => {
     toggleClose.current.click()
   }
   return (
-    <><nav className="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark"><div className="container-fluid">
+    <><nav className="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme={`${mode.type}`}><div className="container-fluid">
       <Link className="navbar-brand" to="/">iNotebook</Link>
-      <button ref={toggleClose} className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span className="navbar-toggler-icon"></span>
-      </button>
+      <div className='d-flex'>
+        <button className={`mx-2 bg-transparent hover:pointer border-0 d-flex align-items-center fs-4`} onClick={changeMode}>
+          <span className='fs-6 me-2'>{mode.type === 'light' ? "Enable Dark Mode" : "Enable Light Mode"}</span>
+          <i className={`bi bi-${mode.type === 'light' ? 'moon-stars-fill' : 'brightness-high-fill'}`} />
+        </button>
+        <button ref={toggleClose} className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span className="navbar-toggler-icon"></span>
+        </button>
+      </div>
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
           <li className="nav-item">
@@ -30,7 +52,7 @@ const Navbar = () => {
         <div className="d-flex">
           {localStorage.getItem('token') ?
             <>
-              <Link className='btn btn-outline-primary text-white ' to="/profile" onClick={closeNavbar}>Profile</Link>
+              <Link className='btn border border-primary' to="/profile" onClick={closeNavbar}>Profile</Link>
               <button className="btn btn-primary mx-1" onClick={() => {
                 handleLogout()
                 closeNavbar()
@@ -43,7 +65,9 @@ const Navbar = () => {
           }
         </div>
       </div>
-    </div></nav></>
+    </div></nav>
+    <hr className={`m-0`} />
+    </>
   )
 }
 

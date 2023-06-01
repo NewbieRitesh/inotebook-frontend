@@ -14,11 +14,14 @@ import ForgotPassword from "./components/ForgotPassword";
 import LoadingBar from "react-top-loading-bar"
 import { useContext } from "react";
 import generalContext from "./context/general/generalContext";
+import { useSelector } from "react-redux";
+import { modeStyle } from "./redux/reducer/darkModeReducer";
 
 function App() {
+  const mode = useSelector(modeStyle)
   const { progress } = useContext(generalContext)
   return (
-    <>
+    <div className={`${mode.type === "dark" ? "bg-black" : "bg-light"} ${mode.text} d-flex flex-column`} data-bs-theme={`${mode.type}`} style={{ minHeight: "100vh" }}>
       <AlertState>
         <UserState>
           <NoteState>
@@ -42,7 +45,7 @@ function App() {
         </UserState>
       </AlertState>
 
-    </>
+    </div>
   );
 }
 

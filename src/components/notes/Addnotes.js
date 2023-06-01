@@ -30,7 +30,7 @@ const Addnotes = () => {
                 </div>
                 <div className="col-md-6">
                     <label htmlFor="tags" className="form-label">Tags</label>
-                    <input type="text" className="form-control" name='tags' id="tags" placeholder="important, not important" onChange={handleChange} />
+                    <input type="text" className="form-control" name='tags' id="tags" onChange={handleChange} />
                 </div>
                 <div className="col-md-12">
                     <label htmlFor="description" className="d-flex form-label">description <span className={`${valiClass.description} mx-2 text-danger`} style={{ fontSize: "13px" }}>Enter atleast 3 character in description</span></label>

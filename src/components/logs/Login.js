@@ -24,11 +24,11 @@ const Login = () => {
                 <h1 className="text-center fs-2">Login</h1>
                 <div className="mb-3">
                     <label htmlFor="exampleInputEmail1" className="form-label">Email</label>
-                    <input type="email" name='email' className="form-control" id="exampleInputEmail1" onChange={handleChange} aria-describedby="emailHelp" />
+                    <input type="email" name='email' className="form-control" id="exampleInputEmail1" onChange={handleChange} placeholder='abc@xyz.com' aria-describedby="emailHelp" />
                 </div>
                 <div className="mb-3">
                     <label htmlFor="password" className="form-label">Password <br /><span style={{ fontSize: "13px" }}>{credentials.password.length < 6 ? "password should be minimum of 6 characters" : ""}</span></label>
-                    <input type={`${showPassword.inputType}`} name='password' className="form-control" id="exampleInputPassword1" onChange={handleChange} />
+                    <input type={`${showPassword.inputType}`} name='password' className="form-control" id="exampleInputPassword1" onChange={handleChange} placeholder='******' />
                     <span style={{ cursor: "pointer", fontSize: "14px" }} onClick={showPasswordFunc}><i className={`${showPassword.iconClassText}`} />{showPassword.show ? " Hide Password" : " Show Password"}</span>
                 </div>
                 <Link className='text-decoration-none mb-5' to="/forgot-password">forgot password??</Link>

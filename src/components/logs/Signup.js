@@ -2,8 +2,11 @@ import React, { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import userContext from '../../context/users/userContext';
 import generalContext from '../../context/general/generalContext';
+import { useSelector } from 'react-redux';
+import { modeStyle } from '../../redux/reducer/darkModeReducer';
 
 const Signup = () => {
+  const mode = useSelector(modeStyle)
   // hooks declaration
   const [credentials, setCredentials] = useState({ name: "", email: "", password: "", cpassword: "" })
   const navigate = useNavigate();
@@ -20,25 +23,25 @@ const Signup = () => {
   }
 
   return (
-    <form className="d-flex flex-column justify-content-center align-items-center" style={{ flex: "1" }} onSubmit={clickSignUp}>
+    <form className="d-flex flex-column justify-content-center align-items-center" data-bs-theme={`${mode.type}`} style={{ flex: "1" }} onSubmit={clickSignUp}>
       <div className='border custome-form-width border-dark m-2 p-4 rounded bg-body-secondary'>
         <h1 className="text-center fs-2">Sign Up</h1>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">Name <br /><span style={{ fontSize: "13px" }}>{credentials.name.length < 3 ? "Name should at least 3 characters" : ""}</span></label>
-          <input required type="text" name='name' className="form-control" id="name" onChange={handleChange} />
+          <input required type="text" name='name' className="form-control" id="name" onChange={handleChange} placeholder='abc' />
         </div>
         <div className="mb-3">
           <label htmlFor="email" className="form-label">Email</label>
-          <input required type="email" name='email' className="form-control" id="exampleInputEmail1" onChange={handleChange} aria-describedby="emailHelp" />
+          <input required type="email" name='email' className="form-control" id="exampleInputEmail1" onChange={handleChange} aria-describedby="emailHelp" placeholder='abc@gmail.com' />
         </div>
         <div className="mb-3">
           <label htmlFor="password" className="form-label">Password <br /><span style={{ fontSize: "13px" }}>{credentials.password.length < 6 ? "password should be minimum of 6 characters" : ""}</span></label>
-          <input required type={`${showPassword.inputType}`} name='password' className="form-control" id="password" onChange={handleChange} />
+          <input required type={`${showPassword.inputType}`} name='password' className="form-control" id="password" onChange={handleChange} placeholder='******' />
           <span style={{ cursor: "pointer", fontSize: "14px" }} onClick={showPasswordFunc}><i className={`${showPassword.iconClassText}`} />{showPassword.show ? " Hide Password" : " Show Password"}</span>
         </div>
         <div className="mb-3">
           <label htmlFor="cpassword" className="form-label">Conform Password <span className="text-danger" style={{ fontSize: "13px" }}>{credentials.password !== credentials.cpassword ? "password doesn't match" : ""}</span> </label>
-          <input type={`${showPassword.inputType}`} name='cpassword' className="form-control" id="cpassword" onChange={handleChange} />
+          <input type={`${showPassword.inputType}`} name='cpassword' className="form-control" id="cpassword" onChange={handleChange} placeholder='******' />
         </div>
         <button disabled={process === true || credentials.password !== credentials.cpassword || !credentials.email || credentials.name.length < 3} type="submit" className="btn btn-primary my-2" style={{ width: "100%" }}>SignUp</button>
         <div className="text-center d-block">

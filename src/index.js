@@ -5,15 +5,19 @@ import './index.css'
 import "bootstrap-icons/font/bootstrap-icons.css";
 import reportWebVitals from './reportWebVitals';
 import GeneralState from './context/general/GeneralState';
+import { Provider } from 'react-redux';
+import store from './redux/store'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <GeneralState>
-      <div className='d-flex flex-column' style={{ minHeight: "100vh" }}>
-        <App />
-      </div>
-    </GeneralState>
+    <Provider store={store}>
+      <GeneralState>
+        <div className={``} >
+          <App />
+        </div>
+      </GeneralState>
+    </Provider>
   </React.StrictMode>
 );
 

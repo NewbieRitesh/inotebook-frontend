@@ -1,17 +1,19 @@
 import React, { useContext } from 'react'
 import noteContext from '../../context/notes/noteContext'
 import generalContext from '../../context/general/generalContext'
+import { useSelector } from 'react-redux'
+import { modeStyle } from '../../redux/reducer/darkModeReducer'
 
 export const Noteitem = (props) => {
-
+    const mode = useSelector(modeStyle)
     const context = useContext(noteContext)
     const { process } = useContext(generalContext)
     const { deleteNote } = context
     const { notes, updateNote } = props
 
     return (
-        <div className='col-md-6' style={{ overflowWrap: "anywhere" }}>
-            <div className="border-bottom border-black p-1 my-1 d-flex flex-column justify-content-between">
+        <div className="col-md-6" style={{ overflowWrap: "anywhere" }}>
+            <div className={`p-1 my-1 d-flex flex-column justify-content-between border-bottom ${mode.type === "dark" ? 'border-white' : "border-black"}`}>
                 <div id="data">
                     <h5 className='overflow-hidden d-flex justify-content-between' style={{ margin: "auto" }}>{notes.title}
                         <div>

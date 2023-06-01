@@ -126,7 +126,7 @@ const Profile = () => {
             <label htmlFor="name" className="form-label">Name:</label>
             <div className='d-flex row justify-content-center'>
               <div className='col-sm-8'>
-                <input type="text" name='name' className="form-control" value={`${userData.name ? userData.name : ""}`} id="name" onChange={handleChange} aria-describedby="emailHelp" />
+                <input type="text" name='name' className="form-control" value={`${userData.name ? userData.name : ""}`} id="name" onChange={handleChange} placeholder='please wait' aria-describedby="emailHelp" />
               </div>
               <button disabled={process === true} type='submit' className='col-10 my-1 my-sm-0 col-sm-4 btn btn-primary'>Update</button>
             </div>
@@ -139,7 +139,7 @@ const Profile = () => {
             <label htmlFor="email" className="form-label">Email:</label>
             <div className='d-flex row justify-content-center'>
               <div className='col-sm-8'>
-                <input disabled type="email" name='email' className="form-control" value={`${userData.email ? userData.email : ""}`} id="email" onChange={handleChange} aria-describedby="emailHelp" />
+                <input disabled type="email" name='email' className="form-control" value={`${userData.email ? userData.email : ""}`} id="email" onChange={handleChange} aria-describedby="emailHelp" placeholder='please wait' />
               </div>
               <button disabled={process === true} className='col-10 my-1 my-sm-0 col-sm-4 btn btn-primary' onClick={editEmailClick} type="submit">Edit Email</button>
             </div>
@@ -168,7 +168,7 @@ const Profile = () => {
                 <div className="modal-body">
                   <div className="mb-3">
                     <label htmlFor="password" className="form-label">Password <br /><span style={{ fontSize: "13px" }}>{authPassword.length < 6 ? "password should be minimum of 6 characters" : ""}</span></label>
-                    <input type={`${showPassword.inputType}`} name='password' value={authPassword} className="form-control" id="exampleInputPassword1" onChange={handleAuthPasswordChange} />
+                    <input type={`${showPassword.inputType}`} name='password' value={authPassword} className="form-control" id="exampleInputPassword1" onChange={handleAuthPasswordChange} placeholder='******' />
                     <span style={{ color: "red", fontSize: "13px" }}>{!warning.authenticateWarning ? "" : <>{warning.authenticateWarning} <br /></>}</span>
                     <span style={{ cursor: "pointer", fontSize: "14px" }} onClick={showPasswordFunc}><i className={`${showPassword.iconClassText}`} />{showPassword.show ? " Hide Password" : " Show Password"}</span>
                   </div>
@@ -193,7 +193,7 @@ const Profile = () => {
                   <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div className="modal-body">
-                  <input type="email" name='emailEdit' className="form-control" value={`${userData.emailEdit ? userData.emailEdit : ""}`} id="email-edit" onChange={handleChange} aria-describedby="emailHelp" />
+                  <input type="email" name='emailEdit' className="form-control" value={`${userData.emailEdit ? userData.emailEdit : ""}`} id="email-edit" placeholder='abc@xyz.com' onChange={handleChange} aria-describedby="emailHelp" />
                   <span style={{ fontSize: "13px", color: "red" }}>{warning.availableEmailWarning}</span>
                 </div>
                 <div className="modal-footer">
@@ -217,12 +217,12 @@ const Profile = () => {
                 <div className="modal-body">
                   <div className="mb-3">
                     <label htmlFor="password" className="form-label">Password <br /><span style={{ fontSize: "13px" }}>{credentials.password.length < 6 ? "password should be minimum of 6 characters" : ""}</span></label>
-                    <input required type={`${showPassword.inputType}`} name='password' className="form-control" id="password" onChange={handleOnChangeCredentials} />
+                    <input required type={`${showPassword.inputType}`} name='password' className="form-control" id="password" onChange={handleOnChangeCredentials} placeholder='******' />
                     <span style={{ cursor: "pointer", fontSize: "14px" }} onClick={showPasswordFunc}><i className={`${showPassword.iconClassText}`} />{showPassword.show ? " Hide Password" : " Show Password"}</span>
                   </div>
                   <div className="mb-3">
                     <label htmlFor="cpassword" className="form-label">Conform Password <span className="text-danger" style={{ fontSize: "13px" }}>{credentials.password !== credentials.cpassword ? "password doesn't match" : ""}</span> </label>
-                    <input type={`${showPassword.inputType}`} name='cpassword' className="form-control" id="cpassword" onChange={handleOnChangeCredentials} />
+                    <input type={`${showPassword.inputType}`} name='cpassword' className="form-control" id="cpassword" onChange={handleOnChangeCredentials} placeholder='******' />
                     <span style={{ fontSize: "13px", color: "red" }}>{warning.response}</span>
                   </div>
                 </div>
