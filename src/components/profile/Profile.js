@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import userContext from '../../context/users/userContext'
 import generalContext from '../../context/general/generalContext'
 import { Link, useNavigate } from 'react-router-dom'
@@ -119,37 +119,39 @@ const Profile = () => {
     <div className="d-flex flex-column justify-content-center align-items-center" style={{ flex: "1" }}>
       {/* profile */}
       <div className='border custome-form-width border-dark m-2 p-4 rounded bg-body-secondary'>
+        <h1 className="text-center fs-2">Profile</h1>
         {/* update user data */}
         <form onSubmit={handleUpdateUserData}>
-          <h1 className="text-center fs-2">Profile</h1>
+          <h2 className="fs-4">General Details</h2>
           <div className="mb-3">
             <label htmlFor="name" className="form-label">Name:</label>
-            <div className='d-flex row justify-content-center'>
-              <div className='col-sm-8'>
-                <input type="text" name='name' className="form-control" value={`${userData.name ? userData.name : ""}`} id="name" onChange={handleChange} placeholder='please wait' aria-describedby="emailHelp" />
-              </div>
-              <button disabled={process === true} type='submit' className='col-10 my-1 my-sm-0 col-sm-4 btn btn-primary'>Update</button>
-            </div>
+            <input type="text" name='name' className="form-control" value={`${userData.name ? userData.name : ""}`} id="name" onChange={handleChange} placeholder='please wait' aria-describedby="emailHelp" />
+            <button disabled={process === true} type='submit' className='my-1 btn btn-primary'>Update</button>
           </div>
         </form>
-        <h2 className='fs-4 pt-3'>Credentials</h2>
+        <hr />
         <div className="mb-3">
+          <h2 className='fs-4'>Privacy and Security</h2>
           {/* update email  */}
           <div>
-            <label htmlFor="email" className="form-label">Email:</label>
-            <div className='d-flex row justify-content-center'>
-              <div className='col-sm-8'>
-                <input disabled type="email" name='email' className="form-control" value={`${userData.email ? userData.email : ""}`} id="email" onChange={handleChange} aria-describedby="emailHelp" placeholder='please wait' />
-              </div>
-              <button disabled={process === true} className='col-10 my-1 my-sm-0 col-sm-4 btn btn-primary' onClick={editEmailClick} type="submit">Edit Email</button>
-            </div>
+            <label htmlFor="email" className="form-label fs-5">Email:</label>
+            <input disabled type="email" name='email' className="form-control" value={`${userData.email ? userData.email : ""}`} id="email" onChange={handleChange} aria-describedby="emailHelp" placeholder='please wait' />
+            <button disabled={process === true} className='my-1 btn btn-primary' onClick={editEmailClick} type="submit">Edit Email</button>
           </div>
         </div>
-        <div className="d-flex justify-content-around row">
-          {/* update password */}
-          <button disabled={process === true} className='btn btn-primary my-1 my-sm-0 col-sm-5' onClick={editPasswordClick}>Change Password</button>
-          {/* delete account */}
-          <button disabled={process === true} className='btn btn-danger my-1 my-sm-0 col-sm-5' onClick={handleDelete}>Delete Account</button>
+        {/* update password */}
+        <div>
+          <label htmlFor="password" className='form-label fs-5'>Password:</label>
+          <br />
+          <p>last changed on: {userData.lastPasswordChange ? userData.lastPasswordChange : "Please Wait"}</p>
+          <button disabled={process === true} className='btn btn-primary my-1 my-sm-0' onClick={editPasswordClick}>Change Password</button>
+        </div>
+        <hr />
+        {/* delete account */}
+        <div className='text-danger'>
+          <h2 className='fs-4'>Delation</h2>
+          <p>note: <span>once you delete account there is no way to get it back</span></p>
+          <button disabled={process === true} className='btn btn-danger' onClick={handleDelete}>Delete Account</button>
         </div>
       </div>
 

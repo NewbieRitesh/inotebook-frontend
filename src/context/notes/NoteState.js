@@ -52,6 +52,7 @@ const NoteState = (props) => {
         if (data.success === true) showAlert(data.success, "Note added Successfully")
         else showAlert(data.success, data.response)
         setProgress(100)
+        return data
     }
 
     // update note

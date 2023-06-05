@@ -160,7 +160,7 @@ const UserState = (props) => {
         });
         setProgress(70)
         let data = await response.json();
-        if (data.success === true) showAlert('success', 'Email Updated Successfully')
+        if (data.success === true) showAlert(data.success, 'Email Updated Successfully')
         setProgress(100)
         setProcess(false)
         return data
@@ -187,7 +187,7 @@ const UserState = (props) => {
         });
         setProgress(70)
         let data = await response.json();
-        if (data.success === true) showAlert('success', 'Password Updated Successfully')
+        if (data.success === true) showAlert(data.success, 'Password Updated Successfully')
         setProgress(100)
         setProcess(false)
         return data
@@ -213,7 +213,7 @@ const UserState = (props) => {
         })
         setProgress(70)
         let data = await response.json();
-        if (data.success === true) showAlert('success', 'Account has been deleted')
+        if (data.success === true) showAlert(data.success, 'Account has been deleted')
         setProgress(100)
         setProcess(false)
         return data
@@ -262,13 +262,14 @@ const UserState = (props) => {
         return data
     }
     // call to create new password
-    const sendNewPasswordToUpdatePassword = async (email, newPassword) => {
+    const sendNewPasswordToUpdatePassword = async (email, otp, newPassword) => {
         setProcess(true)
         setProgress(20)
         let headersList = { "Content-Type": "application/json" }
         let bodyContent = JSON.stringify({
             "email": email,
-            "newPassword": newPassword
+            "newPassword": newPassword,
+            "userOTP": otp
         });
         setProgress(30)
         let response = await fetch(`${BASE_URL}api/auth/forgot-update-password`, {

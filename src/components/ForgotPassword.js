@@ -57,7 +57,7 @@ const ForgotPassword = () => {
     }
     // function to change password
     const createPassword = async () => {
-        let data = await sendNewPasswordToUpdatePassword(credentials.email, credentials.newPassword)
+        let data = await sendNewPasswordToUpdatePassword(credentials.email, credentials.otp, credentials.newPassword)
         if (data.success === true) {
             setProgressPage({ ...progressPage, progress: 100 })
             showAlert(data.success, data.response)
